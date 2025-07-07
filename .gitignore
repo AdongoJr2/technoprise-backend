@@ -1,0 +1,64 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.wasm
+*.o
+*.cgo1.go
+*.cgo2.c
+*.syso
+
+# Test binary, generated with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with `-o`
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go module cache
+# This is usually located in your user's home directory ($GOCACHE),
+# but if it's ever created in the project directory, ignore it.
+# __go_build__/
+
+# Environment variables
+.env
+.env.*
+!.env.example # If you have an example .env file you want to commit
+
+# IDE and Editor files
+.idea
+.idea/             # IntelliJ IDEA
+.vscode/           # VS Code
+*.iml              # IntelliJ IDEA module files
+.DS_Store          # macOS specific files
+Thumbs.db          # Windows specific files
+*.swp              # Vim swap files
+*~                 # Emacs backup files
+
+# Ent ORM generated files that should not be committed (as they are generated from schema)
+# However, for Ent, it's common to commit the generated client code
+# if you want to avoid requiring `go generate` on every clone.
+# If you prefer to regenerate on clone, uncomment the following:
+# ent/generate.go
+# ent/*.go
+# !ent/schema/ # Keep schema files
+# !ent/migrate/ # Keep migrate files if you use them
+
+# For this project, we will assume you *do* commit the generated Ent client code
+# to make it easier for others to run without `go generate` initially.
+# If you want to regenerate, you can uncomment the above lines.
+
+# Log files
+*.log
+log/
+
+# Database files (if not using an external DB like Postgres)
+# For Postgres, you typically don't have local database files in the project.
+# If you were using SQLite, you might add:
+# *.db
+# *.sqlite
+# *.sqlite3
+
