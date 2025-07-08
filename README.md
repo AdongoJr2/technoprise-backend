@@ -27,6 +27,8 @@ including creation, retrieval (with pagination and search), updating, and deleti
 * **Pagination:** Supports paginated retrieval of blog posts.
 * **Search Functionality:** Allows searching blog posts by title or content.
 * **RESTful API:** Provides a clean and well-structured API for frontend consumption.
+* **Image Storage:** Blog Images are stored on the server at the moment. For production environment,
+cloud storage services (e.g Amazon S3 or Google Cloud Storage can be considered)
 * **Database Migrations:** Automatic schema creation/update using Ent ORM on application startup (suitable for
   development).
 
