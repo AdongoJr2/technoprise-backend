@@ -96,13 +96,15 @@ All API endpoints are prefixed with `/api/v1`.
 ### Blog Posts
 * `POST /api/v1/posts`
   * **Description**: Creates a new blog post
-  * **Request body (JSON):**
+  * **Request body (multipart/form-data):**
   ```bash
-  {
-    "title": "My First Blog Post",
-    "excerpt": "This is the full content of my first...",
-    "content": "This is the full content of my first blog post."
-  }
+  # example using curl
+  
+  curl -X POST http://localhost:1234/api/v1/posts \
+  -F "title=My New Blog Post" \
+  -F "excerpt=This is a brief summary of my new post." \
+  -F "content=This is the full content of my new blog post, with more details." \
+  -F "image=@/path/to/your/image.jpg"
   ```
   * **Response (JSON):** The created blog post object.
 * `GET /api/v1/posts`
