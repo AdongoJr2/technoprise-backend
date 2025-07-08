@@ -39,6 +39,8 @@ type BlogPostMutation struct {
 	slug          *string
 	content       *string
 	excerpt       *string
+	image         *string
+	published_at  *time.Time
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*BlogPost, error)
@@ -359,6 +361,104 @@ func (m *BlogPostMutation) ResetExcerpt() {
 	m.excerpt = nil
 }
 
+// SetImage sets the "image" field.
+func (m *BlogPostMutation) SetImage(s string) {
+	m.image = &s
+}
+
+// Image returns the value of the "image" field in the mutation.
+func (m *BlogPostMutation) Image() (r string, exists bool) {
+	v := m.image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImage returns the old "image" field's value of the BlogPost entity.
+// If the BlogPost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BlogPostMutation) OldImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
+	}
+	return oldValue.Image, nil
+}
+
+// ClearImage clears the value of the "image" field.
+func (m *BlogPostMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[blogpost.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *BlogPostMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[blogpost.FieldImage]
+	return ok
+}
+
+// ResetImage resets all changes to the "image" field.
+func (m *BlogPostMutation) ResetImage() {
+	m.image = nil
+	delete(m.clearedFields, blogpost.FieldImage)
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (m *BlogPostMutation) SetPublishedAt(t time.Time) {
+	m.published_at = &t
+}
+
+// PublishedAt returns the value of the "published_at" field in the mutation.
+func (m *BlogPostMutation) PublishedAt() (r time.Time, exists bool) {
+	v := m.published_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishedAt returns the old "published_at" field's value of the BlogPost entity.
+// If the BlogPost object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BlogPostMutation) OldPublishedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishedAt: %w", err)
+	}
+	return oldValue.PublishedAt, nil
+}
+
+// ClearPublishedAt clears the value of the "published_at" field.
+func (m *BlogPostMutation) ClearPublishedAt() {
+	m.published_at = nil
+	m.clearedFields[blogpost.FieldPublishedAt] = struct{}{}
+}
+
+// PublishedAtCleared returns if the "published_at" field was cleared in this mutation.
+func (m *BlogPostMutation) PublishedAtCleared() bool {
+	_, ok := m.clearedFields[blogpost.FieldPublishedAt]
+	return ok
+}
+
+// ResetPublishedAt resets all changes to the "published_at" field.
+func (m *BlogPostMutation) ResetPublishedAt() {
+	m.published_at = nil
+	delete(m.clearedFields, blogpost.FieldPublishedAt)
+}
+
 // Where appends a list predicates to the BlogPostMutation builder.
 func (m *BlogPostMutation) Where(ps ...predicate.BlogPost) {
 	m.predicates = append(m.predicates, ps...)
@@ -393,7 +493,7 @@ func (m *BlogPostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *BlogPostMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 8)
 	if m.create_time != nil {
 		fields = append(fields, blogpost.FieldCreateTime)
 	}
@@ -411,6 +511,12 @@ func (m *BlogPostMutation) Fields() []string {
 	}
 	if m.excerpt != nil {
 		fields = append(fields, blogpost.FieldExcerpt)
+	}
+	if m.image != nil {
+		fields = append(fields, blogpost.FieldImage)
+	}
+	if m.published_at != nil {
+		fields = append(fields, blogpost.FieldPublishedAt)
 	}
 	return fields
 }
@@ -432,6 +538,10 @@ func (m *BlogPostMutation) Field(name string) (ent.Value, bool) {
 		return m.Content()
 	case blogpost.FieldExcerpt:
 		return m.Excerpt()
+	case blogpost.FieldImage:
+		return m.Image()
+	case blogpost.FieldPublishedAt:
+		return m.PublishedAt()
 	}
 	return nil, false
 }
@@ -453,6 +563,10 @@ func (m *BlogPostMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldContent(ctx)
 	case blogpost.FieldExcerpt:
 		return m.OldExcerpt(ctx)
+	case blogpost.FieldImage:
+		return m.OldImage(ctx)
+	case blogpost.FieldPublishedAt:
+		return m.OldPublishedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown BlogPost field %s", name)
 }
@@ -504,6 +618,20 @@ func (m *BlogPostMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetExcerpt(v)
 		return nil
+	case blogpost.FieldImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImage(v)
+		return nil
+	case blogpost.FieldPublishedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishedAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown BlogPost field %s", name)
 }
@@ -533,7 +661,14 @@ func (m *BlogPostMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *BlogPostMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(blogpost.FieldImage) {
+		fields = append(fields, blogpost.FieldImage)
+	}
+	if m.FieldCleared(blogpost.FieldPublishedAt) {
+		fields = append(fields, blogpost.FieldPublishedAt)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -546,6 +681,14 @@ func (m *BlogPostMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *BlogPostMutation) ClearField(name string) error {
+	switch name {
+	case blogpost.FieldImage:
+		m.ClearImage()
+		return nil
+	case blogpost.FieldPublishedAt:
+		m.ClearPublishedAt()
+		return nil
+	}
 	return fmt.Errorf("unknown BlogPost nullable field %s", name)
 }
 
@@ -570,6 +713,12 @@ func (m *BlogPostMutation) ResetField(name string) error {
 		return nil
 	case blogpost.FieldExcerpt:
 		m.ResetExcerpt()
+		return nil
+	case blogpost.FieldImage:
+		m.ResetImage()
+		return nil
+	case blogpost.FieldPublishedAt:
+		m.ResetPublishedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown BlogPost field %s", name)

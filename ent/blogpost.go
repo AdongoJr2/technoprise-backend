@@ -28,7 +28,11 @@ type BlogPost struct {
 	// Content holds the value of the "content" field.
 	Content string `json:"content,omitempty"`
 	// Excerpt holds the value of the "excerpt" field.
-	Excerpt      string `json:"excerpt,omitempty"`
+	Excerpt string `json:"excerpt,omitempty"`
+	// Image holds the value of the "image" field.
+	Image string `json:"image,omitempty"`
+	// PublishedAt holds the value of the "published_at" field.
+	PublishedAt  time.Time `json:"published_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -39,9 +43,9 @@ func (*BlogPost) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case blogpost.FieldID:
 			values[i] = new(sql.NullInt64)
-		case blogpost.FieldTitle, blogpost.FieldSlug, blogpost.FieldContent, blogpost.FieldExcerpt:
+		case blogpost.FieldTitle, blogpost.FieldSlug, blogpost.FieldContent, blogpost.FieldExcerpt, blogpost.FieldImage:
 			values[i] = new(sql.NullString)
-		case blogpost.FieldCreateTime, blogpost.FieldUpdateTime:
+		case blogpost.FieldCreateTime, blogpost.FieldUpdateTime, blogpost.FieldPublishedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -100,6 +104,18 @@ func (bp *BlogPost) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				bp.Excerpt = value.String
 			}
+		case blogpost.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
+			} else if value.Valid {
+				bp.Image = value.String
+			}
+		case blogpost.FieldPublishedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field published_at", values[i])
+			} else if value.Valid {
+				bp.PublishedAt = value.Time
+			}
 		default:
 			bp.selectValues.Set(columns[i], values[i])
 		}
@@ -153,6 +169,12 @@ func (bp *BlogPost) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("excerpt=")
 	builder.WriteString(bp.Excerpt)
+	builder.WriteString(", ")
+	builder.WriteString("image=")
+	builder.WriteString(bp.Image)
+	builder.WriteString(", ")
+	builder.WriteString("published_at=")
+	builder.WriteString(bp.PublishedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

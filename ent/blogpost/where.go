@@ -84,6 +84,16 @@ func Excerpt(v string) predicate.BlogPost {
 	return predicate.BlogPost(sql.FieldEQ(FieldExcerpt, v))
 }
 
+// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
+func Image(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldEQ(FieldImage, v))
+}
+
+// PublishedAt applies equality check predicate on the "published_at" field. It's identical to PublishedAtEQ.
+func PublishedAt(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldEQ(FieldPublishedAt, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.BlogPost {
 	return predicate.BlogPost(sql.FieldEQ(FieldCreateTime, v))
@@ -422,6 +432,131 @@ func ExcerptEqualFold(v string) predicate.BlogPost {
 // ExcerptContainsFold applies the ContainsFold predicate on the "excerpt" field.
 func ExcerptContainsFold(v string) predicate.BlogPost {
 	return predicate.BlogPost(sql.FieldContainsFold(FieldExcerpt, v))
+}
+
+// ImageEQ applies the EQ predicate on the "image" field.
+func ImageEQ(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldEQ(FieldImage, v))
+}
+
+// ImageNEQ applies the NEQ predicate on the "image" field.
+func ImageNEQ(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNEQ(FieldImage, v))
+}
+
+// ImageIn applies the In predicate on the "image" field.
+func ImageIn(vs ...string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldIn(FieldImage, vs...))
+}
+
+// ImageNotIn applies the NotIn predicate on the "image" field.
+func ImageNotIn(vs ...string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNotIn(FieldImage, vs...))
+}
+
+// ImageGT applies the GT predicate on the "image" field.
+func ImageGT(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldGT(FieldImage, v))
+}
+
+// ImageGTE applies the GTE predicate on the "image" field.
+func ImageGTE(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldGTE(FieldImage, v))
+}
+
+// ImageLT applies the LT predicate on the "image" field.
+func ImageLT(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldLT(FieldImage, v))
+}
+
+// ImageLTE applies the LTE predicate on the "image" field.
+func ImageLTE(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldLTE(FieldImage, v))
+}
+
+// ImageContains applies the Contains predicate on the "image" field.
+func ImageContains(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldContains(FieldImage, v))
+}
+
+// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
+func ImageHasPrefix(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldHasPrefix(FieldImage, v))
+}
+
+// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
+func ImageHasSuffix(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldHasSuffix(FieldImage, v))
+}
+
+// ImageIsNil applies the IsNil predicate on the "image" field.
+func ImageIsNil() predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldIsNull(FieldImage))
+}
+
+// ImageNotNil applies the NotNil predicate on the "image" field.
+func ImageNotNil() predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNotNull(FieldImage))
+}
+
+// ImageEqualFold applies the EqualFold predicate on the "image" field.
+func ImageEqualFold(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldEqualFold(FieldImage, v))
+}
+
+// ImageContainsFold applies the ContainsFold predicate on the "image" field.
+func ImageContainsFold(v string) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldContainsFold(FieldImage, v))
+}
+
+// PublishedAtEQ applies the EQ predicate on the "published_at" field.
+func PublishedAtEQ(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldEQ(FieldPublishedAt, v))
+}
+
+// PublishedAtNEQ applies the NEQ predicate on the "published_at" field.
+func PublishedAtNEQ(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNEQ(FieldPublishedAt, v))
+}
+
+// PublishedAtIn applies the In predicate on the "published_at" field.
+func PublishedAtIn(vs ...time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldIn(FieldPublishedAt, vs...))
+}
+
+// PublishedAtNotIn applies the NotIn predicate on the "published_at" field.
+func PublishedAtNotIn(vs ...time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNotIn(FieldPublishedAt, vs...))
+}
+
+// PublishedAtGT applies the GT predicate on the "published_at" field.
+func PublishedAtGT(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldGT(FieldPublishedAt, v))
+}
+
+// PublishedAtGTE applies the GTE predicate on the "published_at" field.
+func PublishedAtGTE(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldGTE(FieldPublishedAt, v))
+}
+
+// PublishedAtLT applies the LT predicate on the "published_at" field.
+func PublishedAtLT(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldLT(FieldPublishedAt, v))
+}
+
+// PublishedAtLTE applies the LTE predicate on the "published_at" field.
+func PublishedAtLTE(v time.Time) predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldLTE(FieldPublishedAt, v))
+}
+
+// PublishedAtIsNil applies the IsNil predicate on the "published_at" field.
+func PublishedAtIsNil() predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldIsNull(FieldPublishedAt))
+}
+
+// PublishedAtNotNil applies the NotNil predicate on the "published_at" field.
+func PublishedAtNotNil() predicate.BlogPost {
+	return predicate.BlogPost(sql.FieldNotNull(FieldPublishedAt))
 }
 
 // And groups predicates with the AND operator between them.

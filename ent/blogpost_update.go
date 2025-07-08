@@ -90,6 +90,46 @@ func (bpu *BlogPostUpdate) SetNillableExcerpt(s *string) *BlogPostUpdate {
 	return bpu
 }
 
+// SetImage sets the "image" field.
+func (bpu *BlogPostUpdate) SetImage(s string) *BlogPostUpdate {
+	bpu.mutation.SetImage(s)
+	return bpu
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (bpu *BlogPostUpdate) SetNillableImage(s *string) *BlogPostUpdate {
+	if s != nil {
+		bpu.SetImage(*s)
+	}
+	return bpu
+}
+
+// ClearImage clears the value of the "image" field.
+func (bpu *BlogPostUpdate) ClearImage() *BlogPostUpdate {
+	bpu.mutation.ClearImage()
+	return bpu
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (bpu *BlogPostUpdate) SetPublishedAt(t time.Time) *BlogPostUpdate {
+	bpu.mutation.SetPublishedAt(t)
+	return bpu
+}
+
+// SetNillablePublishedAt sets the "published_at" field if the given value is not nil.
+func (bpu *BlogPostUpdate) SetNillablePublishedAt(t *time.Time) *BlogPostUpdate {
+	if t != nil {
+		bpu.SetPublishedAt(*t)
+	}
+	return bpu
+}
+
+// ClearPublishedAt clears the value of the "published_at" field.
+func (bpu *BlogPostUpdate) ClearPublishedAt() *BlogPostUpdate {
+	bpu.mutation.ClearPublishedAt()
+	return bpu
+}
+
 // Mutation returns the BlogPostMutation object of the builder.
 func (bpu *BlogPostUpdate) Mutation() *BlogPostMutation {
 	return bpu.mutation
@@ -183,6 +223,18 @@ func (bpu *BlogPostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := bpu.mutation.Excerpt(); ok {
 		_spec.SetField(blogpost.FieldExcerpt, field.TypeString, value)
 	}
+	if value, ok := bpu.mutation.Image(); ok {
+		_spec.SetField(blogpost.FieldImage, field.TypeString, value)
+	}
+	if bpu.mutation.ImageCleared() {
+		_spec.ClearField(blogpost.FieldImage, field.TypeString)
+	}
+	if value, ok := bpu.mutation.PublishedAt(); ok {
+		_spec.SetField(blogpost.FieldPublishedAt, field.TypeTime, value)
+	}
+	if bpu.mutation.PublishedAtCleared() {
+		_spec.ClearField(blogpost.FieldPublishedAt, field.TypeTime)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bpu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{blogpost.Label}
@@ -262,6 +314,46 @@ func (bpuo *BlogPostUpdateOne) SetNillableExcerpt(s *string) *BlogPostUpdateOne 
 	if s != nil {
 		bpuo.SetExcerpt(*s)
 	}
+	return bpuo
+}
+
+// SetImage sets the "image" field.
+func (bpuo *BlogPostUpdateOne) SetImage(s string) *BlogPostUpdateOne {
+	bpuo.mutation.SetImage(s)
+	return bpuo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (bpuo *BlogPostUpdateOne) SetNillableImage(s *string) *BlogPostUpdateOne {
+	if s != nil {
+		bpuo.SetImage(*s)
+	}
+	return bpuo
+}
+
+// ClearImage clears the value of the "image" field.
+func (bpuo *BlogPostUpdateOne) ClearImage() *BlogPostUpdateOne {
+	bpuo.mutation.ClearImage()
+	return bpuo
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (bpuo *BlogPostUpdateOne) SetPublishedAt(t time.Time) *BlogPostUpdateOne {
+	bpuo.mutation.SetPublishedAt(t)
+	return bpuo
+}
+
+// SetNillablePublishedAt sets the "published_at" field if the given value is not nil.
+func (bpuo *BlogPostUpdateOne) SetNillablePublishedAt(t *time.Time) *BlogPostUpdateOne {
+	if t != nil {
+		bpuo.SetPublishedAt(*t)
+	}
+	return bpuo
+}
+
+// ClearPublishedAt clears the value of the "published_at" field.
+func (bpuo *BlogPostUpdateOne) ClearPublishedAt() *BlogPostUpdateOne {
+	bpuo.mutation.ClearPublishedAt()
 	return bpuo
 }
 
@@ -387,6 +479,18 @@ func (bpuo *BlogPostUpdateOne) sqlSave(ctx context.Context) (_node *BlogPost, er
 	}
 	if value, ok := bpuo.mutation.Excerpt(); ok {
 		_spec.SetField(blogpost.FieldExcerpt, field.TypeString, value)
+	}
+	if value, ok := bpuo.mutation.Image(); ok {
+		_spec.SetField(blogpost.FieldImage, field.TypeString, value)
+	}
+	if bpuo.mutation.ImageCleared() {
+		_spec.ClearField(blogpost.FieldImage, field.TypeString)
+	}
+	if value, ok := bpuo.mutation.PublishedAt(); ok {
+		_spec.SetField(blogpost.FieldPublishedAt, field.TypeTime, value)
+	}
+	if bpuo.mutation.PublishedAtCleared() {
+		_spec.ClearField(blogpost.FieldPublishedAt, field.TypeTime)
 	}
 	_node = &BlogPost{config: bpuo.config}
 	_spec.Assign = _node.assignValues

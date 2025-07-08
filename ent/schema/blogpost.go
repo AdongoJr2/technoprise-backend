@@ -19,6 +19,8 @@ func (BlogPost) Fields() []ent.Field {
 		field.String("slug").Unique().NotEmpty(),
 		field.Text("content").NotEmpty(),
 		field.String("excerpt").MaxLen(160).NotEmpty(),
+		field.String("image").Optional(),
+		field.Time("published_at").Optional(),
 	}
 }
 

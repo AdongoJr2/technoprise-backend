@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/AdongoJr2/technoprise-backend/config"
 )
@@ -27,6 +28,29 @@ func main() {
 		AllowOrigins: []string{"*"}, // Allow all origins for development. Restrict in production.
 	}))
 
+	// Configure static file serving
+	uploadsDir := "./uploads" // Local directory where images are stored
+	publicPath := "/images"   // Public URL path
+
+	// Prevent directory listing
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Root:   uploadsDir,
+		Browse: false,
+		Index:  "",
+	}))
+
+	// Set proper cache headers
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if strings.HasPrefix(c.Path(), "/images/") {
+				c.Response().Header().Set("Cache-Control", "public, max-age=31536000")
+			}
+			return next(c)
+		}
+	})
+
+	e.Static(publicPath, uploadsDir)
+
 	// Initialize database and Ent client
 	client, err := config.ConnectDB(cfg)
 	if err != nil {
@@ -40,8 +64,12 @@ func main() {
 	}()
 
 	// Initialize services and handlers with the Ent client
-	blogPostService := services.NewBlogPostService(client)
-	blogPostController := controllers.NewBlogPostHandler(blogPostService)
+	imageService := services.NewImageService(
+		uploadsDir, // Local storage directory
+		publicPath, // Base URL for accessing images
+	)
+	blogPostService := services.NewBlogPostService(client, imageService)
+	blogPostController := controllers.NewBlogPostHandler(blogPostService, imageService)
 
 	// Register routes
 	e.GET("/", func(c echo.Context) error {

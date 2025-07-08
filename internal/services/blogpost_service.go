@@ -13,19 +13,26 @@ import (
 
 // BlogPostService provides business logic for blog posts.
 type BlogPostService struct {
-	client *ent.Client
+	client       *ent.Client
+	imageService *ImageService
 }
 
 // NewBlogPostService creates a new BlogPostService.
-func NewBlogPostService(client *ent.Client) *BlogPostService {
-	return &BlogPostService{client: client}
+func NewBlogPostService(client *ent.Client, imageService *ImageService) *BlogPostService {
+	return &BlogPostService{
+		client:       client,
+		imageService: imageService,
+	}
 }
 
 // CreateBlogPostInput defines the input structure for creating a blog post.
 type CreateBlogPostInput struct {
-	Title   string `json:"title"`
-	Excerpt string `json:"excerpt"`
-	Content string `json:"content"`
+	Title       string  `json:"title"`
+	Excerpt     string  `json:"excerpt"`
+	Content     string  `json:"content"`
+	Image       *string `json:"image,omitempty"`
+	PublishedAt *string `json:"published_at,omitempty"`
+	Slug        *string `json:"slug,omitempty"`
 }
 
 // UpdateBlogPostInput defines the input structure for updating a blog post.
@@ -51,7 +58,12 @@ type PaginationMeta struct {
 
 // CreateBlogPost creates a new blog post in the database.
 func (s *BlogPostService) CreateBlogPost(ctx context.Context, input CreateBlogPostInput) (*ent.BlogPost, error) {
-	slug := utils.GenerateSlug(input.Title)
+	slug := ""
+	if input.Slug != nil && *input.Slug != "" {
+		slug = utils.GenerateSlug(*input.Slug)
+	} else {
+		slug = utils.GenerateSlug(input.Title)
+	}
 
 	existing, err := s.client.BlogPost.Query().Where(blogpost.SlugEQ(slug)).Only(ctx)
 	if err != nil && !ent.IsNotFound(err) {
@@ -62,17 +74,34 @@ func (s *BlogPostService) CreateBlogPost(ctx context.Context, input CreateBlogPo
 		slug = fmt.Sprintf("%s-%d", slug, time.Now().Unix())
 	}
 
-	post, err := s.client.BlogPost.
+	var publishedAt time.Time
+	if input.PublishedAt != nil {
+		parsedTime, err := time.Parse(time.RFC3339, *input.PublishedAt)
+		if err != nil {
+			return nil, fmt.Errorf("invalid published_at format: %w. Use format %s", err, time.RFC3339)
+		}
+		publishedAt = parsedTime
+	} else {
+		publishedAt = time.Now()
+	}
+
+	postCreate := s.client.BlogPost.
 		Create().
 		SetTitle(input.Title).
 		SetSlug(slug).
 		SetContent(input.Content).
 		SetExcerpt(input.Excerpt).
-		Save(ctx)
+		SetPublishedAt(publishedAt)
+
+	if input.Image != nil {
+		postCreate = postCreate.SetImage(*input.Image)
+	}
+
+	post, err := postCreate.Save(ctx)
 	if err != nil {
-		log.Printf("Error creating blog post: %v", err)
 		return nil, fmt.Errorf("failed to create blog post: %w", err)
 	}
+
 	return post, nil
 }
 
@@ -118,6 +147,8 @@ func (s *BlogPostService) GetBlogPosts(ctx context.Context, page, limit int, sea
 			blogpost.FieldExcerpt,
 			blogpost.FieldCreateTime,
 			blogpost.FieldUpdateTime,
+			blogpost.FieldPublishedAt,
+			blogpost.FieldImage,
 		).
 		Order(ent.Desc(blogpost.FieldCreateTime)).
 		Offset(offset).
@@ -141,7 +172,20 @@ func (s *BlogPostService) GetBlogPosts(ctx context.Context, page, limit int, sea
 
 // GetBlogPostBySlug retrieves a single blog post by its slug.
 func (s *BlogPostService) GetBlogPostBySlug(ctx context.Context, slug string) (*ent.BlogPost, error) {
-	post, err := s.client.BlogPost.Query().Where(blogpost.SlugEQ(slug)).Only(ctx)
+	post, err := s.client.BlogPost.
+		Query().
+		Select(
+			blogpost.FieldID,
+			blogpost.FieldTitle,
+			blogpost.FieldSlug,
+			blogpost.FieldContent,
+			blogpost.FieldExcerpt,
+			blogpost.FieldCreateTime,
+			blogpost.FieldUpdateTime,
+			blogpost.FieldPublishedAt,
+			blogpost.FieldImage,
+		).Where(blogpost.SlugEQ(slug)).
+		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, fmt.Errorf("blog post with slug '%s' not found", slug)

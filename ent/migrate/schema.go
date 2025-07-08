@@ -17,12 +17,21 @@ var (
 		{Name: "slug", Type: field.TypeString, Unique: true},
 		{Name: "content", Type: field.TypeString, Size: 2147483647},
 		{Name: "excerpt", Type: field.TypeString, Size: 160},
+		{Name: "image", Type: field.TypeString, Nullable: true},
+		{Name: "published_at", Type: field.TypeTime, Nullable: true},
 	}
 	// BlogPostsTable holds the schema information for the "blog_posts" table.
 	BlogPostsTable = &schema.Table{
 		Name:       "blog_posts",
 		Columns:    BlogPostsColumns,
 		PrimaryKey: []*schema.Column{BlogPostsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "blogpost_slug",
+				Unique:  false,
+				Columns: []*schema.Column{BlogPostsColumns[4]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{

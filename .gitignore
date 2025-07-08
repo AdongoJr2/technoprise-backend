@@ -62,3 +62,6 @@ log/
 # *.sqlite
 # *.sqlite3
 
+# FIle uploads
+uploads/
+

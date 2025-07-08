@@ -87,3 +87,10 @@ func GenerateSlug(s string) string {
 	s = strings.Trim(s, "-")
 	return s
 }
+
+func GetPublicHost(c echo.Context) string {
+	if c.Request().TLS != nil {
+		return "https://" + c.Request().Host
+	}
+	return "http://" + c.Request().Host
+}

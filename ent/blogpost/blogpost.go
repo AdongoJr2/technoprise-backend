@@ -25,6 +25,10 @@ const (
 	FieldContent = "content"
 	// FieldExcerpt holds the string denoting the excerpt field in the database.
 	FieldExcerpt = "excerpt"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
+	// FieldPublishedAt holds the string denoting the published_at field in the database.
+	FieldPublishedAt = "published_at"
 	// Table holds the table name of the blogpost in the database.
 	Table = "blog_posts"
 )
@@ -38,6 +42,8 @@ var Columns = []string{
 	FieldSlug,
 	FieldContent,
 	FieldExcerpt,
+	FieldImage,
+	FieldPublishedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -103,4 +109,14 @@ func ByContent(opts ...sql.OrderTermOption) OrderOption {
 // ByExcerpt orders the results by the excerpt field.
 func ByExcerpt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldExcerpt, opts...).ToFunc()
+}
+
+// ByImage orders the results by the image field.
+func ByImage(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldImage, opts...).ToFunc()
+}
+
+// ByPublishedAt orders the results by the published_at field.
+func ByPublishedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPublishedAt, opts...).ToFunc()
 }

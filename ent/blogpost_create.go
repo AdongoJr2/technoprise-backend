@@ -72,6 +72,34 @@ func (bpc *BlogPostCreate) SetExcerpt(s string) *BlogPostCreate {
 	return bpc
 }
 
+// SetImage sets the "image" field.
+func (bpc *BlogPostCreate) SetImage(s string) *BlogPostCreate {
+	bpc.mutation.SetImage(s)
+	return bpc
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (bpc *BlogPostCreate) SetNillableImage(s *string) *BlogPostCreate {
+	if s != nil {
+		bpc.SetImage(*s)
+	}
+	return bpc
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (bpc *BlogPostCreate) SetPublishedAt(t time.Time) *BlogPostCreate {
+	bpc.mutation.SetPublishedAt(t)
+	return bpc
+}
+
+// SetNillablePublishedAt sets the "published_at" field if the given value is not nil.
+func (bpc *BlogPostCreate) SetNillablePublishedAt(t *time.Time) *BlogPostCreate {
+	if t != nil {
+		bpc.SetPublishedAt(*t)
+	}
+	return bpc
+}
+
 // Mutation returns the BlogPostMutation object of the builder.
 func (bpc *BlogPostCreate) Mutation() *BlogPostMutation {
 	return bpc.mutation
@@ -206,6 +234,14 @@ func (bpc *BlogPostCreate) createSpec() (*BlogPost, *sqlgraph.CreateSpec) {
 	if value, ok := bpc.mutation.Excerpt(); ok {
 		_spec.SetField(blogpost.FieldExcerpt, field.TypeString, value)
 		_node.Excerpt = value
+	}
+	if value, ok := bpc.mutation.Image(); ok {
+		_spec.SetField(blogpost.FieldImage, field.TypeString, value)
+		_node.Image = value
+	}
+	if value, ok := bpc.mutation.PublishedAt(); ok {
+		_spec.SetField(blogpost.FieldPublishedAt, field.TypeTime, value)
+		_node.PublishedAt = value
 	}
 	return _node, _spec
 }
